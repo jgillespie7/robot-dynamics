@@ -22,6 +22,11 @@ double Wheel::torque(double wheelSpeed, double vX, double vY, double omega){
     if (fabs(k) > 1){
         k = 1;
     }
+    //If there is no slip, force and torque are zero
+    //Avoid dividing by zero
+    if (k == 0){
+        return 0;
+    }
     //Calculate the force in the longitudinal direction
     double fY = -k*normalForce*mu*(vY - radius*wheelSpeed)/
         sqrt( pow(vX,2) + pow(vY-radius*wheelSpeed,2) );
@@ -42,12 +47,15 @@ void Wheel::force(double wheelSpeed, double vX, double vY, double omega,
     if (fabs(k) > 1){
         k = 1;
     }
-    double fX = -k*normalForce*mu*(vX)/
-              sqrt( pow(vX,2) + pow(vY-radius*wheelSpeed,2) );
-    double fY = -k*normalForce*mu*(vY - radius*wheelSpeed)/
-         sqrt( pow(vX,2) + pow(vY-radius*wheelSpeed,2) );
-    forceX += fX;
-    forceY += fY;
-    //moment is counterclockwise about origin
-    moment += fY*xPos - fX*yPos;
+    //Only calculate forces if there is slip
+    if (k != 0){
+            double fX = -k*normalForce*mu*(vX)/
+                        sqrt( pow(vX,2) + pow(vY-radius*wheelSpeed,2) );
+            double fY = -k*normalForce*mu*(vY - radius*wheelSpeed)/
+                        sqrt( pow(vX,2) + pow(vY-radius*wheelSpeed,2) );
+            forceX += fX;
+            forceY += fY;
+            //moment is counterclockwise about origin
+            moment += fY*xPos - fX*yPos;
+    }
 }

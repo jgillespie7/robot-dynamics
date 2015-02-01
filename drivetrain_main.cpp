@@ -29,7 +29,7 @@ int main(){
     double dt = .01;
     double t = 0;
     double ay, ax, alpha;
-    double vy=.01, vx=0, w=0;
+    double vy=0, vx=0, w=0;
     std::ofstream output;
     output.open ("output.dat");
     do {
